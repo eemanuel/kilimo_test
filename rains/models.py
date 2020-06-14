@@ -19,5 +19,5 @@ class Rain(TimeStampModel):
 
         return (
             f"id={self.id}, land={self.field.id}, milimeters={round(self.milimeters, 3)}, "
-            f"rain_date_time={self.rain_datetime.strftime('(%Y-%m-%d, %H:%Mhs)')}"
+            f"rain_datetime={self.rain_datetime.strftime('(%Y-%m-%d, %H:%Mhs)')}"
         )
