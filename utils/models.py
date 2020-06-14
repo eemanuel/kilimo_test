@@ -8,4 +8,4 @@ class TimeStampModel(Model):
     updated = DateTimeField(auto_now=True)
 
     class Meta:
-        abstract = True
+        abstract = True  # This model will then not be used to create any database table.
