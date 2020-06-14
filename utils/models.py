@@ -1,3 +1,11 @@
-from django.db import models
+from django.db.models import DateTimeField, Model
 
-# Create your models here.
+
+class TimeStampModel(Model):
+    # created datetime
+    created = DateTimeField(auto_now_add=True, null=True)
+    # updated datetime, that actualize each time the model is updated.
+    updated = DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
