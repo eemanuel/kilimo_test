@@ -4,7 +4,7 @@ from rains.models import Rain
 
 
 class RainAdmin(ModelAdmin):
-    model_fields_tuple = ("id", "field", "milimeters", "rain_datetime")
+    model_fields_tuple = ("id", "field", "milimeters", "date_time")
 
     # set presentational fields
     list_display = model_fields_tuple
@@ -12,7 +12,7 @@ class RainAdmin(ModelAdmin):
     ordering = ("id",)
 
     # set detail fields
-    fields = ["field", "milimeters", "rain_datetime"]
+    fields = ["field", "milimeters", "date_time"]
 
 
 site.register(Rain, RainAdmin)
