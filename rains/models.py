@@ -5,7 +5,7 @@ from utils.models import TimeStampModel
 
 
 class Rain(TimeStampModel):
-    field = ForeignKey(to=Field, on_delete=CASCADE, related_name="rain")  # muchas lluvias a un campo
+    field = ForeignKey(to=Field, on_delete=CASCADE, related_name="rains")
     milimeters = FloatField()
     rain_datetime = DateTimeField()
 
