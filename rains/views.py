@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from rains.serializers import RainSerializer
 
-# Create your views here.
+from rest_framework.generics import CreateAPIView
+
+
+class RainCreateAPIView(CreateAPIView):
+    """
+    Create a Rain model instance.
+    """
+
+    serializer_class = RainSerializer
