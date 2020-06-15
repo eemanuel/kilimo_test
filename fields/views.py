@@ -43,7 +43,7 @@ class FieldRainAvgListAPIView(ListAPIView):
         # make the queryset and return it.
         queryset = Field.objects.annotate(
             avg_milimeters=Avg(
-                Case(When(rains__rain_datetime__gte=last_days, then="rains__milimeters"), output_field=FloatField())
+                Case(When(rains__date_time__gte=last_days, then="rains__milimeters"), output_field=FloatField())
             )
         ).order_by("id")
         return queryset
