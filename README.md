@@ -9,7 +9,7 @@ the PostgreSQL interactive terminal program, execute:
 $  psql postgres
 ```
 
-then execute the following commands:
+Then execute the following commands:
 
 ```sh
 # CREATE USER user_kilimo WITH PASSWORD 'kilimo';
@@ -43,14 +43,14 @@ $  pip install -r requirements/local.txt
 
 ### To run development server inside virtualenv
 
-create migrations and migrate:
+Make migrations and migrate:
 
 ```sh
 $ python manage.py makemigrations
 $ python manage.py migrate
 ```
 
-create the unique user instance:
+Create the unique user instance:
 
 ```sh
 $ python manage.py createsuperuser
@@ -60,7 +60,9 @@ Here, you will enter your desired username and press enter key.
 You will then be prompted for your desired email address:
 The final step is to enter your password.
 
-then run the local server:
+You can access to admin only with this superuser.
+
+Then run the local server:
 
 ```sh
 $ python manage.py runserver
