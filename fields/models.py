@@ -5,13 +5,9 @@ from django.db.models import CASCADE, CharField, DecimalField, FloatField, Forei
 
 
 class Field(TimeStampModel):
-    # the user that is the field's owner.
-    owner = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE, related_name="field")
-    # the field's name.
+    owner = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE, related_name="fields")
     name = CharField(max_length=20)
-    # the field's extension in hectares.
     hectares = FloatField()
-    # the field's localization with their latitude and longitude.
     latitude = DecimalField(max_digits=8, decimal_places=6)
     longitude = DecimalField(max_digits=9, decimal_places=6)
 
