@@ -115,7 +115,6 @@ class FieldRainAvgListAPIViewTestCase(TestCase):
 
         response = self._get_data(queryparams=self.queryparams)
         data = response.data
-
         last_days_int = self.queryparams.get("last_days")
         now_datetime = now()
         now_datetime_ymd = datetime(now_datetime.year, now_datetime.month, now_datetime.day)
@@ -124,7 +123,7 @@ class FieldRainAvgListAPIViewTestCase(TestCase):
         for field_dict in data:
             id_value = field_dict.get("id")
             field = Field.objects.get(id=id_value)
-            rain_dicts_qs = field.rain.filter(rain_datetime__gte=last_days).values("milimeters")
+            rain_dicts_qs = field.rains.filter(rain_datetime__gte=last_days).values("milimeters")
             milimeters_list = []
             for rain_dict in rain_dicts_qs:
                 milimeters = rain_dict.get("milimeters")
@@ -197,7 +196,7 @@ class FieldAccumulatedRainListAPIViewTestCase(TestCase):
             id_value = field_dict.get("id")
             id_list.append(id_value)
             field = Field.objects.get(id=id_value)
-            rain_dicts_qs = field.rain.values("milimeters")
+            rain_dicts_qs = field.rains.values("milimeters")
             accumulated_rain = 0
             for rain_dict in rain_dicts_qs:
                 milimeters = rain_dict.get("milimeters")
@@ -211,7 +210,7 @@ class FieldAccumulatedRainListAPIViewTestCase(TestCase):
 
         field_exclude_qs = Field.objects.exclude(id__in=id_list)
         for field_exclude in field_exclude_qs:
-            rain_dicts_qs = field_exclude.rain.values("milimeters")
+            rain_dicts_qs = field_exclude.rains.values("milimeters")
             accumulated_rain = 0
             for rain_dict in rain_dicts_qs:
                 milimeters = rain_dict.get("milimeters")
@@ -262,7 +261,6 @@ class FieldAllRainListAPIViewTestCase(TestCase):
         last_field = Field.objects.last()
         response = self._get_data(pk=last_field.id)
         data = response.data
-
         for rain_dict in data:
             assert rain_dict.get("id") is not None
             assert rain_dict.get("field") == last_field.id
