@@ -48,3 +48,52 @@ class FieldRainAvgListAPIView(ListAPIView):
         ).order_by("id")
         return queryset
 
+
+class FieldAccumulatedRainListAPIView(ListAPIView):
+    """
+    Lists all fields whit their total rain as long
+    the total rain is grater than 'accumulated_rain_gt' value.
+    """
+
+    serializer_class = FieldSerializer
+
+    def get_queryset(self):
+        accumulated_rain_gt = self.request.query_params.get("accumulated_rain_gt")
+        # check accumulated_rain_gt.
+        if accumulated_rain_gt is None:
+            return Field.objects.none()
+        accumulated_rain = float(accumulated_rain_gt)
+        if accumulated_rain < 0:
+            return Field.objects.none()
+        # make the queryset and return it.
+        queryset = (
+            Field.objects.annotate(accumulated_rain=Sum("rain__milimeters"))
+            .filter(accumulated_rain__gt=accumulated_rain)
+            .order_by("id")
+        )
+        return queryset
+
+
+class FieldAllRainListAPIView(ListAPIView):
+    """
+    Lists all fields as long the total rain is grater than 'accumulated_rain_gt' value.
+    """
+
+    serializer_class = RainSerializer
+
+    # Use __init__ when you need to control initialization of a new instance.
+    def __init__(self, **kwargs):
+        self.field_model = None  # define field_model as class variable.
+        super().__init__(**kwargs)  # call the ListAPIView.__init__ method.
+
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs.get("pk")
+        # try overwrite self.field_model.
+        try:
+            self.field_model = Field.objects.get(id=pk)
+        except Field.DoesNotExist:
+            return Response(f"Field id={pk} doesn't exist.", status=status.HTTP_400_BAD_REQUEST)
+        return super().get(self, request, *args, **kwargs)  # call the ListAPIView.get method.
+
+    def get_queryset(self):
+        return self.field_model.rain.all()
