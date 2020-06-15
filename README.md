@@ -1,4 +1,4 @@
-## Run Locally
+## Kilimo Test
 
 ### Requirements
 
@@ -6,22 +6,22 @@ It is necessary to have PostgreSQL installed and then to enter to
 the PostgreSQL interactive terminal program, execute:
 
 ```sh
-$  psql postgres
+$ psql postgres
 ```
 
 Then execute the following commands:
 
-```sh
-# CREATE USER user_kilimo WITH PASSWORD 'kilimo';
-# ALTER ROLE user_kilimo CREATEDB;
-# CREATE DATABASE kilimo_db;
-# GRANT ALL PRIVILEGES ON DATABASE kilimo_db TO user_kilimo;
+```postgres
+=# CREATE USER user_kilimo WITH PASSWORD 'kilimo';
+=# ALTER ROLE user_kilimo CREATEDB;
+=# CREATE DATABASE kilimo_db;
+=# GRANT ALL PRIVILEGES ON DATABASE kilimo_db TO user_kilimo;
 ```
 
 ### Clone repository
 
 ```sh
-$  git clone https://github.com/eemanuel/kilimo_test
+$ git clone https://github.com/eemanuel/kilimo_test
 ```
 
 ### Create virtualenv
@@ -29,8 +29,8 @@ $  git clone https://github.com/eemanuel/kilimo_test
 Above the cloned directory
 
 ```sh
-$  virtualenv venv
-$  source venv/bin/activate
+$ virtualenv venv
+$ source venv/bin/activate
 ```
 
 ### Install requirements
@@ -38,7 +38,7 @@ $  source venv/bin/activate
 At the same level than manage.py
 
 ```sh
-$  pip install -r requirements/local.txt
+$ pip install -r requirements/local.txt
 ```
 
 ### To run development server inside virtualenv
