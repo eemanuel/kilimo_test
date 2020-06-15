@@ -52,9 +52,9 @@ class RainFactory:
         milimeters = kwargs.get("milimeters")
         if milimeters is None:
             kwargs["milimeters"] = uniform(0.1, 2000)
-        rain_datetime = kwargs.get("rain_datetime")
-        if rain_datetime is None:
-            kwargs["rain_datetime"] = random_datetime_10_days_left_and_now()
+        date_time = kwargs.get("date_time")
+        if date_time is None:
+            kwargs["date_time"] = random_datetime_10_days_left_and_now()
         rain = mixer.blend(Rain, **kwargs)
         return rain
 
