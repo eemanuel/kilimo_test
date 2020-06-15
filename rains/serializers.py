@@ -10,12 +10,12 @@ class RainSerializer(ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data):
-        rain_date_time_str = data.get("rain_datetime")
+        date_time_str = data.get("date_time")
         try:
-            rain_datetime = datetime.strptime(rain_date_time_str, "%Y-%m-%d, %H:%Mhs")
+            date_time = datetime.strptime(date_time_str, "%Y-%m-%d, %H:%Mhs")
         except (TypeError, ValueError):
             return super().to_internal_value(data)
-        data.update({"rain_datetime": rain_datetime})
+        data.update({"date_time": date_time})
         return super().to_internal_value(data)
 
     @staticmethod
@@ -29,11 +29,11 @@ class RainSerializer(ModelSerializer):
         return milimeters
 
     @staticmethod
-    def validate_rain_datetime(rain_datetime):
+    def validate_date_time(date_time):
         """
         It checks if rain_datetime is not in the future.
         """
 
-        if now() < rain_datetime:
-            raise ValidationError("rain_datetime must be a past datetime.")
-        return rain_datetime
+        if now() < date_time:
+            raise ValidationError("date_time must be a past datetime.")
+        return date_time
