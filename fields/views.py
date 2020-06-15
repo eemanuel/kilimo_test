@@ -33,7 +33,7 @@ class FieldRainAvgListAPIView(ListAPIView):
         if last_days_query_param is None:
             return Field.objects.none()
         last_days_int = int(last_days_query_param)
-        if last_days_int < 0 or 7 < last_days_int:
+        if last_days_int not in range(7):
             return Field.objects.none()
         # create last_days aware datetime.
         now_datetime = now()
@@ -43,7 +43,7 @@ class FieldRainAvgListAPIView(ListAPIView):
         # make the queryset and return it.
         queryset = Field.objects.annotate(
             avg_milimeters=Avg(
-                Case(When(rain__rain_datetime__gte=last_days, then="rain__milimeters"), output_field=FloatField())
+                Case(When(rains__rain_datetime__gte=last_days, then="rains__milimeters"), output_field=FloatField())
             )
         ).order_by("id")
         return queryset
@@ -67,7 +67,7 @@ class FieldAccumulatedRainListAPIView(ListAPIView):
             return Field.objects.none()
         # make the queryset and return it.
         queryset = (
-            Field.objects.annotate(accumulated_rain=Sum("rain__milimeters"))
+            Field.objects.annotate(accumulated_rain=Sum("rains__milimeters"))
             .filter(accumulated_rain__gt=accumulated_rain)
             .order_by("id")
         )
@@ -96,4 +96,4 @@ class FieldAllRainListAPIView(ListAPIView):
         return super().get(self, request, *args, **kwargs)  # call the ListAPIView.get method.
 
     def get_queryset(self):
-        return self.field_model.rain.all()
+        return self.field_model.rains.all()
