@@ -74,27 +74,30 @@ $ python manage.py runserver
 http://localhost:8000/
 ```
 
+## Admin
+
+```sh
+http://localhost:8000/admin/
+```
+
 ## Endpoints
 
-**Create Field (POST):**
+**Create Field:**
 
-field/create/
+[POST] /field/create/
 
-**List Fields** (with their rain average at the last 'last_days' days) **(GET):**
+**List Fields** (with their rain average at the last 'last_days' days)**:**
 
-field/rain_avg_list/?last_days=<int:last_days>
+[GET] /field/rain_avg_list/?last_days=<int:last_days>
 
-**List Fields** (when their accomulated rain is greather than 'accumulated_rain_gt') **(GET):**
+**List Fields** (when their accomulated rain is greather than 'accumulated_rain_gt')**:**
 
-field/accomulated_rain_list/?accumulated_rain_gt=<int:accumulated_rain_gt>
+[GET] /field/accomulated_rain_list/?accumulated_rain_gt=<int:accumulated_rain_gt>
 
-**List Rains** (form field) **(GET):**
+**List Rains** (form field)**:**
 
-field/<int:pk>/all_rain/
+[GET] /field/<int:pk>/all_rain/
 
-**Create Rain (POST):**
+**Create Rain:**
 
-rain/create/
-
-**Admin:**
-admin/
+[POST] /rain/create/
