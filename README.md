@@ -76,20 +76,25 @@ http://localhost:8000/
 
 ## Endpoints
 
-**Create Field:**
+**Create Field (POST):**
+
 field/create/
 
-**Create Rain:**
-rain/create/
+**List Fields** (with their rain average at the last 'last_days' days) **(GET):**
 
-**List:**
-field/rain_avg_list/
+field/rain_avg_list/?last_days=<int:last_days>
 
-**Detail:**
-field/accomulated_rain_list/
+**List Fields** (when their accomulated rain is greather than 'accumulated_rain_gt') **(GET):**
 
-**Update:**
+field/accomulated_rain_list/?accumulated_rain_gt=<int:accumulated_rain_gt>
+
+**List Rains** (form field) **(GET):**
+
 field/<int:pk>/all_rain/
+
+**Create Rain (POST):**
+
+rain/create/
 
 **Admin:**
 admin/
