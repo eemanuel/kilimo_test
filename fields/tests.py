@@ -168,3 +168,115 @@ class FieldRainAvgListAPIViewTestCase(TestCase):
         assert data == []
         assert response.status_code == status.HTTP_200_OK
 
+
+class FieldAccumulatedRainListAPIViewTestCase(TestCase):
+    def setUp(self):
+        self.user = UserFactory.create_user()
+        self._create_fields_and_rains()
+        self.queryparams = {"accumulated_rain_gt": 5174.53}
+        self.client = APIClient()
+
+    def _get_data(self, queryparams):
+        return self.client.get(reverse("fields_accomulated_rain_list"), queryparams)
+
+    def _create_fields_and_rains(self):
+        for _ in range(5):
+            FieldFactory.create_field_and_rains(owner=self.user)
+
+    def test_success(self):
+        """
+        Testing if all fields are successfully listed
+        whith the accumulated rain grather than 'accumulated_rain_gt' queryparam.
+        """
+
+        response = self._get_data(queryparams=self.queryparams)
+        data = response.data
+
+        id_list = []
+        for field_dict in data:
+            id_value = field_dict.get("id")
+            id_list.append(id_value)
+            field = Field.objects.get(id=id_value)
+            rain_dicts_qs = field.rain.values("milimeters")
+            accumulated_rain = 0
+            for rain_dict in rain_dicts_qs:
+                milimeters = rain_dict.get("milimeters")
+                accumulated_rain += milimeters
+            assert self.queryparams.get("accumulated_rain_gt") < accumulated_rain
+            assert field_dict.get("owner") is not None
+            assert field_dict.get("name") is not None
+            assert field_dict.get("hectares") is not None
+            assert field_dict.get("latitude") is not None
+            assert field_dict.get("longitude") is not None
+
+        field_exclude_qs = Field.objects.exclude(id__in=id_list)
+        for field_exclude in field_exclude_qs:
+            rain_dicts_qs = field_exclude.rain.values("milimeters")
+            accumulated_rain = 0
+            for rain_dict in rain_dicts_qs:
+                milimeters = rain_dict.get("milimeters")
+                accumulated_rain += milimeters
+            assert accumulated_rain <= self.queryparams.get("accumulated_rain_gt")
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_void_queryparams_succes(self):
+        """
+        Testing if view return [] whit void queryparams.
+        """
+
+        response = self._get_data(queryparams={})
+        data = response.data
+        assert data == []
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_negative_value_queryparams_succes(self):
+        """
+        Testing if view return [] whit negative value in queryparams.
+        """
+
+        response = self._get_data(queryparams={"accumulated_rain_gt": -1})
+        data = response.data
+        assert data == []
+        assert response.status_code == status.HTTP_200_OK
+
+
+class FieldAllRainListAPIViewTestCase(TestCase):
+    def setUp(self):
+        self.user = UserFactory.create_user()
+        self._create_fields_and_rains()
+        self.queryparams = {"accumulated_rain_gt": 5174.53}
+        self.client = APIClient()
+
+    def _get_data(self, pk):
+        return self.client.get(reverse("fields_all_rain_list", kwargs={"pk": pk}))
+
+    def _create_fields_and_rains(self):
+        for _ in range(5):
+            FieldFactory.create_field_and_rains(owner=self.user)
+
+    def test_success(self):
+        """
+        Testing if all field's rains are successfully listed.
+        """
+
+        last_field = Field.objects.last()
+        response = self._get_data(pk=last_field.id)
+        data = response.data
+
+        for rain_dict in data:
+            assert rain_dict.get("id") is not None
+            assert rain_dict.get("field") == last_field.id
+            assert rain_dict.get("milimeters") is not None
+            assert rain_dict.get("rain_datetime") is not None
+            assert rain_dict.get("created") is not None
+            assert rain_dict.get("updated") is not None
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_bad_pk_error(self):
+        """
+        Testing if view return error with bad pk.
+        """
+
+        response = self._get_data(pk=666)
+        assert response.data == "Field id=666 doesn't exist."
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
