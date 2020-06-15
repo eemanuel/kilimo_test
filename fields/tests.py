@@ -243,7 +243,6 @@ class FieldAllRainListAPIViewTestCase(TestCase):
     def setUp(self):
         self.user = UserFactory.create_user()
         self._create_fields_and_rains()
-        self.queryparams = {"accumulated_rain_gt": 5174.53}
         self.client = APIClient()
 
     def _get_data(self, pk):
