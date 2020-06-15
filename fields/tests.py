@@ -123,7 +123,7 @@ class FieldRainAvgListAPIViewTestCase(TestCase):
         for field_dict in data:
             id_value = field_dict.get("id")
             field = Field.objects.get(id=id_value)
-            rain_dicts_qs = field.rains.filter(rain_datetime__gte=last_days).values("milimeters")
+            rain_dicts_qs = field.rains.filter(date_time__gte=last_days).values("milimeters")
             milimeters_list = []
             for rain_dict in rain_dicts_qs:
                 milimeters = rain_dict.get("milimeters")
@@ -265,7 +265,7 @@ class FieldAllRainListAPIViewTestCase(TestCase):
             assert rain_dict.get("id") is not None
             assert rain_dict.get("field") == last_field.id
             assert rain_dict.get("milimeters") is not None
-            assert rain_dict.get("rain_datetime") is not None
+            assert rain_dict.get("date_time") is not None
             assert rain_dict.get("created") is not None
             assert rain_dict.get("updated") is not None
         assert response.status_code == status.HTTP_200_OK
