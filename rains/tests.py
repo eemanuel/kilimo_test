@@ -17,11 +17,11 @@ class RainCreateAPIViewTestCase(TestCase):
     def setUp(self):
         self.user = UserFactory.create_user()
         self.field = FieldFactory.create_field(owner=self.user)
-        rain_datetime = random_datetime_10_days_left_and_now()
+        date_time = random_datetime_10_days_left_and_now()
         self.request_data = {
             "field": self.field.id,
             "milimeters": 3423.322,
-            "rain_datetime": rain_datetime.strftime("%Y-%m-%d, %H:%Mhs"),
+            "date_time": date_time.strftime("%Y-%m-%d, %H:%Mhs"),
         }
         self.client = APIClient()
 
@@ -41,10 +41,10 @@ class RainCreateAPIViewTestCase(TestCase):
         rain = Rain.objects.last()
         assert rain.field.id == data.get("field") == self.request_data.get("field")
         assert rain.milimeters == data.get("milimeters") == self.request_data.get("milimeters")
-        rain_rain_datetime = rain.rain_datetime.strftime("%Y-%m-%d, %H:%Mhs")
-        data_rain_datetime = datetime.strptime(data.get("rain_datetime"), "%Y-%m-%dT%H:%M:%SZ")
+        rain_rain_datetime = rain.date_time.strftime("%Y-%m-%d, %H:%Mhs")
+        data_rain_datetime = datetime.strptime(data.get("date_time"), "%Y-%m-%dT%H:%M:%SZ")
         data_rain_datetime = data_rain_datetime.strftime("%Y-%m-%d, %H:%Mhs")
-        assert rain_rain_datetime == data_rain_datetime == self.request_data.get("rain_datetime")
+        assert rain_rain_datetime == data_rain_datetime == self.request_data.get("date_time")
         assert rain.created is not None
         assert rain.updated is not None
         assert response.status_code == status.HTTP_201_CREATED
@@ -61,7 +61,7 @@ class RainCreateAPIViewTestCase(TestCase):
         data = response.data
         assert data.get("field")[0] == ErrorDetail(string="This field is required.", code="required")
         assert data.get("milimeters")[0] == ErrorDetail(string="This field is required.", code="required")
-        assert data.get("rain_datetime")[0] == ErrorDetail(string="This field is required.", code="required")
+        assert data.get("date_time")[0] == ErrorDetail(string="This field is required.", code="required")
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_bad_request_error(self):
@@ -69,11 +69,11 @@ class RainCreateAPIViewTestCase(TestCase):
         Testing if a Rain is not created whit bad values in request.data .
         """
 
-        rain_datetime = random_datetime_10_days_left_and_now() + timedelta(days=100)
+        date_time = random_datetime_10_days_left_and_now() + timedelta(days=100)
         request_data = {
             "field": 666,
             "milimeters": -2000,
-            "rain_datetime": rain_datetime.strftime("%Y-%m-%d, %H:%Mhs"),
+            "date_time": date_time.strftime("%Y-%m-%d, %H:%Mhs"),
         }
         assert Field.objects.count() == 1
         assert Rain.objects.count() == 0
@@ -87,24 +87,24 @@ class RainCreateAPIViewTestCase(TestCase):
         assert data.get("milimeters")[0] == ErrorDetail(
             string="milimeters must be 0 or positive value.", code="invalid"
         )
-        assert data.get("rain_datetime")[0] == ErrorDetail(
-            string="rain_datetime must be a past datetime.", code="invalid"
+        assert data.get("date_time")[0] == ErrorDetail(
+            string="date_time must be a past datetime.", code="invalid"
         )
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_incomplete_rain_date_time_error(self):
         """
-        Testing if a Rain is not created whit incomplete rain_datetime in request.data .
+        Testing if a Rain is not created whit incomplete date_time in request.data .
         """
 
-        rain_datetime = random_datetime_10_days_left_and_now()
-        self.request_data.update({"rain_datetime": rain_datetime.strftime("%Y-%m-%d")})
+        date_time = random_datetime_10_days_left_and_now()
+        self.request_data.update({"date_time": date_time.strftime("%Y-%m-%d")})
         assert Field.objects.count() == 1
         assert Rain.objects.count() == 0
         response = self._post_data(data=self.request_data)
         assert Rain.objects.count() == 0
         data = response.data
-        assert data.get("rain_datetime")[0] == ErrorDetail(
+        assert data.get("date_time")[0] == ErrorDetail(
             string="Datetime has wrong format. Use one of these formats instead: "
             "YYYY-MM-DDThh:mm[:ss[.uuuuuu]][+HH:MM|-HH:MM|Z].",
             code="invalid",
