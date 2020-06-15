@@ -38,7 +38,7 @@ $ source venv/bin/activate
 At the same level than manage.py
 
 ```sh
-$ pip install -r requirements/local.txt
+$ pip install -r requirements.txt
 ```
 
 ### To run development server inside virtualenv
